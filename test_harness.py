@@ -1,78 +1,69 @@
-#Import Python Stuff
-import thinkplot
-import thinkstats2
+#import thinkplot
+#import thinkstats2
 import pandas as pd
 import numpy as np
 import pytest
+import scipy
+import math
 
 #Import solution file
 import import_ipynb
 import solution_file
 
 #Load data file
-with open("LabourTrainingEvaluationData.csv") as f:
-    data = pd.read_csv(f)
+df_in = pd.read_csv("diabetes.csv")
+df_in.dropna()
+df_in = df_in[df_in["BloodPressure"]>0]
+df_in = df_in[df_in["SkinThickness"]>0]
+df_in = df_in[df_in["BMI"]>0]
+df_in = df_in[df_in["Glucose"]>0]
+df_in = df_in[df_in["Insulin"]>0]
+
 
 #Import remote solutions
 import httpimport
 from httpimport import *
-url = "https://gist.githubusercontent.com/AkeemSemper/5efb8626f92408eb17149905bf564d92/raw/5d250b0129aa534b39f5e384c3417ab9c35aa4e9/"
-with httpimport.remote_repo(["stats_Quiz1_sol"], url):
-    import stats_Quiz1_sol
+url = "https://gist.githubusercontent.com/AkeemSemper/e5e433f1f3138889260634242bab19fd/raw/f9ead571f7590068b5eac5771d82f338ddef4838/"
+with httpimport.remote_repo(["stats_Quiz2_sol"], url):
+    import stats_Quiz2_sol
 
 #Set Test Variables
-df_in = data #data source
-#Range
-columnNameRange = "Earnings_1978"
-#EarnedAbove
-amount = 19000
-columnNameAbove = "Earnings_1978"
-#Difference
-column_low = "Earnings_1974"
-column_high = "Earnings_1978"
-#Age Count
-low_age = 18
-high_age = 35
-columnNameAge = "Age"
-#cohort
-cohort1 = "Race"
-cohort2 = "Hisp"
-cohort3 = "MaritalStatus"
-earningsColumn = "Earnings_1978"
+col1 = "Glucose"
+col2 = "BloodPressure"
+col3 = "SkinThickness"
+col4 = "Insulin"
+col5 = "BMI"
+
 
 @pytest.mark.a
-def test_rangeMag():
-    studAnswer = solution_file.rangeMag(df_in, columnNameRange)
-    solAnswer = stats_Quiz1_sol.rangeMag(df_in, columnNameRange)
-    assert (studAnswer == solAnswer)
+def test_multiCorr():
+    studAnswer = solution_file.rangeMag(df_in, col1, col2, False)
+    solAnswer = stats_Quiz2_sol.rangeMag(df_in, col1, col2, False)
+    print(studAnswer, solAnswer)
+    assert math.isclose(studAnswer, solAnswer, abs_tol=.01)
 
 @pytest.mark.b
-def test_earnedAbove():
-    studAnswer = solution_file.earnedAbove(df_in, amount, columnNameAbove)
-    solAnswer = stats_Quiz1_sol.earnedAbove(df_in, amount, columnNameAbove)
-    assert (studAnswer == solAnswer)
+def test_rankSkew():
+    stud1, studSk1, stud2, studSk2, stud3, stdSk3 = solution_file.rankSkew(df_in, col5, col3, col4)
+    sol1, solSk1, sol2, solSk2, sol3, solSk3 = stats_Quiz2_sol.rankSkew(df_in, col5, col3, col4)
+    print(stud2, sol2, stud3, sol3)
+    assert ((stud2 == sol2) & (stud3 == sol3))
 
 @pytest.mark.c
-def test_difference_74_78():
-    studAnswer = solution_file.difference_74_78(df_in, column_low, column_high)
-    solAnswer = stats_Quiz1_sol.difference_74_78(df_in, column_low, column_high)
+def test_passAnalytical():
+    studAnswer, mod1 = solution_file.passAnalytical(df_in, col3)
+    solAnswer, mod2 = stats_Quiz2_sol.passAnalytical(df_in, col3)
+    print(studAnswer, solAnswer)
     assert (studAnswer == solAnswer)
 
 @pytest.mark.d
-def test_ageCount():
-    studAnswer = solution_file.ageCount(df_in, columnNameAge, low_age, high_age)
-    solAnswer = stats_Quiz1_sol.ageCount(df_in, columnNameAge, low_age, high_age)
+def test_logNormOrNorm():
+    studAnswer = solution_file.lognormOrNorm(df_in, col2)
+    solAnswer = stats_Quiz2_sol.lognormOrNorm(df_in, col2)
+    print(studAnswer, solAnswer)
     assert (studAnswer == solAnswer)
 
-@pytest.mark.e
-def test_cohort():
-    studAnswer = solution_file.cohort(df_in, cohort1, cohort2, cohort3, earningsColumn)
-    solAnswer = stats_Quiz1_sol.cohort(df_in, cohort1, cohort2, cohort3, earningsColumn)
-    assert (studAnswer == solAnswer)
-
-#
-#test_rangeMag(data, "Age")
-#test_earnedAbove(data, 19000, "Earnings_1978")
-#test_difference_74_78(data, "Earnings_1974", "Earnings_1978")
-#test_ageCount(data, 18, 35)
-#test_cohort(data, "Race", "Hisp", "MaritalStatus", "Earnings_1978")
+test_multiCorr()
+test_rankSkew()
+test_passAnalytical()
+test_logNormOrNorm
