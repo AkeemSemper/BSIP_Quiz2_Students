@@ -23,10 +23,11 @@ df_in = df_in[df_in["Insulin"]>0]
 #Import remote solutions
 import httpimport
 from httpimport import *
-url = "https://gist.githubusercontent.com/AkeemSemper/e5e433f1f3138889260634242bab19fd/raw/65758ec80ff6be0279829ffb0550edddfe0f2d46/"
+url = "https://gist.githubusercontent.com/AkeemSemper/e5e433f1f3138889260634242bab19fd/raw/26ba0ae01ebeb613a2524428e498ea99eab9ccec/"
 with httpimport.remote_repo(["stats_Quiz2_sol"], url):
     import stats_Quiz2_sol
 print("Imported solutions")
+
 #Set Test Variables
 col1 = "Glucose"
 col2 = "BloodPressure"
@@ -36,8 +37,8 @@ col5 = "BMI"
 
 @pytest.mark.a
 def test_multiCorr():
-    studAnswer = solution_file.rangeMag(df_in, col1, col2, False)
-    solAnswer = stats_Quiz2_sol.rangeMag(df_in, col1, col2, False)
+    studAnswer = solution_file.multiCorr(df_in, col1, col2, False)
+    solAnswer = stats_Quiz2_sol.multiCorr(df_in, col1, col2, False)
     print(studAnswer, solAnswer)
     assert math.isclose(studAnswer, solAnswer, abs_tol=.01)
 
