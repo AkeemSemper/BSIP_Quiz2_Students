@@ -5,6 +5,7 @@ import numpy as np
 import pytest
 import math
 
+
 #Import solution file
 import import_ipynb
 import solution_file
