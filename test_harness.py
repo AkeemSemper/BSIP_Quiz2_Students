@@ -1,5 +1,5 @@
-#import thinkplot
-#import thinkstats2
+import thinkplot
+import thinkstats2
 import pandas as pd
 import numpy as np
 import pytest
@@ -23,17 +23,16 @@ df_in = df_in[df_in["Insulin"]>0]
 #Import remote solutions
 import httpimport
 from httpimport import *
-url = "https://gist.githubusercontent.com/AkeemSemper/e5e433f1f3138889260634242bab19fd/raw/f9ead571f7590068b5eac5771d82f338ddef4838/"
+url = "https://gist.githubusercontent.com/AkeemSemper/e5e433f1f3138889260634242bab19fd/raw/65758ec80ff6be0279829ffb0550edddfe0f2d46/"
 with httpimport.remote_repo(["stats_Quiz2_sol"], url):
     import stats_Quiz2_sol
-
+print("Imported solutions")
 #Set Test Variables
 col1 = "Glucose"
 col2 = "BloodPressure"
 col3 = "SkinThickness"
 col4 = "Insulin"
 col5 = "BMI"
-
 
 @pytest.mark.a
 def test_multiCorr():
@@ -63,7 +62,12 @@ def test_logNormOrNorm():
     print(studAnswer, solAnswer)
     assert (studAnswer == solAnswer)
 
+print("before")
 test_multiCorr()
+print("after multicorr")
 test_rankSkew()
+print("after rankskew")
 test_passAnalytical()
+print("after passanalytical")
 test_logNormOrNorm
+print("end")
