@@ -3,7 +3,6 @@ import thinkstats2
 import pandas as pd
 import numpy as np
 import pytest
-import scipy
 import math
 
 #Import solution file
@@ -23,7 +22,7 @@ df_in = df_in[df_in["Insulin"]>0]
 #Import remote solutions
 import httpimport
 from httpimport import *
-url = "https://gist.githubusercontent.com/AkeemSemper/e5e433f1f3138889260634242bab19fd/raw/26ba0ae01ebeb613a2524428e498ea99eab9ccec/"
+url = "https://gist.githubusercontent.com/AkeemSemper/e5e433f1f3138889260634242bab19fd/raw/56b7c6b8a2f2e428b3ac89fa8848727e6cf7abd0/"
 with httpimport.remote_repo(["stats_Quiz2_sol"], url):
     import stats_Quiz2_sol
 print("Imported solutions")
@@ -70,5 +69,5 @@ test_rankSkew()
 print("after rankskew")
 test_passAnalytical()
 print("after passanalytical")
-test_logNormOrNorm
+test_logNormOrNorm()
 print("end")
