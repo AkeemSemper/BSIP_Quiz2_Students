@@ -1,0 +1,62 @@
+# This is a basic workflow to help you get started with Actions
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  job-public-repo-ubuntu:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Copy Environment Variables
+        run: |
+          echo "GH_PAT=${{ secrets.GH_PAT }}" >> $GITHUB_ENV
+      
+      - name: Open Original Repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'AkeemSemper/BSIP_Quiz2_Students'
+          ref: 'main'
+
+          #token: ${{ secrets.GH_PAT }}
+      - name: Check Rep
+        run: |
+          ls
+          git status
+
+      - name: Clone GuillaumeFalourd/poc-github-actions PRIVATE repository
+        uses: GuillaumeFalourd/clone-github-repo-action@main
+        with:
+          owner: 'AkeemSemper'
+          repository: 'Basic_Stats_in_Python_Full_Repo'
+          access-token: ${{ secrets.GH_PAT }}
+
+      - name: Access cloned repository content
+        run: |
+          # Check Status
+          #ls -rf
+
+          # Workbooks
+          cp -r Basic_Stats_in_Python_Full_Repo/student_work/quizzes/quiz2/* .
+          rm -f SAMP_SOL*
+
+          # Clear
+          rm -rf Basic_Stats_in_Python_Full_Repo
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Generated Update from Main Repository"
+          git push --force
